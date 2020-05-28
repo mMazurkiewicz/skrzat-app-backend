@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 let FairyTalesModel = new Schema({
     name: {
-        type: String
+        type: String,
+        required: true
     },
     description: {
-        type: String
+        type: String,
+        required: true
     },
 });
 
