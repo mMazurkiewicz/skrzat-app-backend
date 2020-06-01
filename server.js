@@ -11,6 +11,10 @@ let FairyTalesModel = require('./fairyTales.model')
 const employeesRoutes = express.Router();
 let EmployeesModel = require('./employees.model')
 
+const teamsRoutes = express.Router();
+let TeamsModel = require('./teams.model')
+
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -126,11 +130,66 @@ employeesRoutes.route('/:id').delete(function(req, res) {
         .then(() => res.status(200).send('entry deleted'))
 });
 
+// teams endpoints
+teamsRoutes.route('/').get(function(req, res) {
+    TeamsModel.find(function(err, teams) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(teams);
+        }
+    });
+});
+
+teamsRoutes.route('/:id').get(function(req, res) {
+    let id = req.params.id;
+    TeamsModel.findById(id, function(err, team) {
+        res.json(team);
+    });
+});
+
+teamsRoutes.route('/0').post(function(req, res) {
+    let team = new TeamsModel(req.body);
+    team.save()
+        .then(team => {
+            res.status(200).json(team);
+        })
+        .catch(err => {
+            res.status(400).send('adding new team failed');
+        });
+});
+
+teamsRoutes.route('/:id').post(function(req, res) {
+  TeamsModel.findById(req.params.id, function(err, team) {
+    if (!team)
+      res.status(404).send("data is not found");
+    else
+      team.name = req.body.name;
+      team.mail = req.body.mail;
+      team.phoneNumber = req.body.phoneNumber;
+
+      team.save().then(team => {
+          res.json(team);
+      })
+      .catch(err => {
+          res.status(400).json(err);
+      });
+  });
+});
+
+teamsRoutes.route('/:id').delete(function(req, res) {
+    TeamsModel
+        .findByIdAndRemove(req.params.id)
+        .then(() => res.status(200).send('entry deleted'))
+});
+
 
 // root endpoints
 app.use('/fairyTales', fairyTalesRoutes);
 
 app.use('/employees', employeesRoutes);
+
+app.use('/teams', teamsRoutes);
 
 // listen
 app.listen(PORT, function() {
