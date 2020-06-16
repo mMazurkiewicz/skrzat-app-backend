@@ -14,6 +14,17 @@ let EmployeesModel = new Schema({
         type: String,
         required: true
     },
+    // teams: [
+    //   {
+    //     name: {
+    //       type: String,
+    //     },
+    //     _id: {
+    //       type: String,
+    //     }
+    //   }
+    // ],
+    // teams: [{ type: Schema.ObjectId, ref: 'TeamsModel'}]
 });
 
 module.exports = mongoose.model('EmployeesModel', EmployeesModel);

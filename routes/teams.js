@@ -13,18 +13,22 @@ router.route('/').get(function(req, res) {
 router.route('/:id').get(function(req, res) {
   let id = req.params.id;
   TeamsModel.findById(id, function(err, team) {
-    res.json(team);
+    if (err) 
+      console.log(err);
+    else 
+      res.json(team);
   });
 });
 
 router.route('/0').post(function(req, res) {
   let team = new TeamsModel(req.body);
+  
   team.save()
     .then(team => {
-        res.status(200).json(team);
+      res.status(200).json(team);
     })
     .catch(err => {
-        res.status(400).send('adding new team failed');
+      res.status(400).send('adding new team failed');
     });
 });
 
@@ -34,8 +38,7 @@ router.route('/:id').post(function(req, res) {
       res.status(404).send("data is not found");
     else
       team.name = req.body.name;
-      team.mail = req.body.mail;
-      team.phoneNumber = req.body.phoneNumber;
+      team.members = req.body.members;
 
       team.save().then(team => {
           res.json(team);

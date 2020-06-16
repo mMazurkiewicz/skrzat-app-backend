@@ -1,20 +1,50 @@
 const router = require('express').Router();
 let EmployeesModel = require('../models/employees.model');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 router.route('/').get(function(req, res) {
-  EmployeesModel.find(function(err, employees) {
-      if (err) {
-          console.log(err);
-      } else {
-          res.json(employees);
+  EmployeesModel.aggregate([
+    {
+      $lookup:
+      {
+        from: 'teamsmodels',
+        localField: '_id',
+        foreignField: "members._id",
+        as: 'teams'
       }
+    },
+  ]).exec(function(err, employees) {
+    if (err) 
+      console.log(err);
+    else 
+      res.json(employees);
   });
 });
 
 router.route('/:id').get(function(req, res) {
-  let id = req.params.id;
-  EmployeesModel.findById(id, function(err, employees) {
-      res.json(employees);
+  let id = ObjectId(req.params.id);
+
+  EmployeesModel.aggregate([
+    {
+      $match: {
+        _id: id
+      }
+    },
+    {
+      $lookup:
+      {
+        from: 'teamsmodels',
+        localField: '_id',
+        foreignField: "members._id",
+        as: 'teams'
+      }
+    }
+  ]).exec(function(err, employee) {
+    if (err) 
+      console.log(err);
+    else 
+      res.json(employee[0]);
   });
 });
 
