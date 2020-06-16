@@ -7,6 +7,7 @@ const PORT = 4000;
 const fairyTalesRoutes = require('./routes/fairyTales');
 const employeesRoutes = require('./routes/employees');
 const teamsRoutes = require('./routes/teams');
+const venuesRoutes = require('./routes/venues');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,6 +25,8 @@ app.use('/fairyTales', fairyTalesRoutes);
 app.use('/employees', employeesRoutes);
 
 app.use('/teams', teamsRoutes);
+
+app.use('/venues', venuesRoutes);
 
 // listen
 app.listen(PORT, function() {
