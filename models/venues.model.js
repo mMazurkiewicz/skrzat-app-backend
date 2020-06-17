@@ -37,6 +37,9 @@ let VenuesModel = new Schema({
     additionalInfo: {
         type: String,
     },
+    lastContact: {
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('VenuesModel', VenuesModel);
