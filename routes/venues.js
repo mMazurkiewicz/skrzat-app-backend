@@ -7,7 +7,7 @@ router.route('/').get(function(req, res) {
       console.log(err);
     else 
       res.json(teams);
-  });
+  }).limit(20);
 });
 
 router.route('/:id').get(function(req, res) {
@@ -37,8 +37,16 @@ router.route('/:id').post(function(req, res) {
     if (!team)
       res.status(404).send("data is not found");
     else
-      team.name = req.body.name; //do uzupelnienia!!!
-      team.members = req.body.members;
+      team.name = req.body.name;
+      team.street = req.body.street;
+      team.streetNo = req.body.streetNo;
+      team.city = req.body.city;
+      team.zip = req.body.zip;
+      team.postOffice = req.body.postOffice;
+      team.phone = req.body.phone;
+      team.website = req.body.website;
+      team.additionalInfo = req.body.additionalInfo;
+      team.lastContact = req.body.lastContact;
 
       team.save().then(team => {
           res.json(team);
