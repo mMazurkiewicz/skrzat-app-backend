@@ -32,7 +32,6 @@ let VenuesModel = new Schema({
     },
     website: {
         type: String,
-        required: true
     },
     additionalInfo: {
         type: String,
