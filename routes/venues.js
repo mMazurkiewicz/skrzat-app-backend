@@ -7,7 +7,7 @@ router.route('/').get(function(req, res) {
       console.log(err);
     else 
       res.json(teams);
-  }).limit(20);
+  })
 });
 
 router.route('/:id').get(function(req, res) {
