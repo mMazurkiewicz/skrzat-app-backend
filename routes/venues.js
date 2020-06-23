@@ -7,7 +7,16 @@ router.route('/').get(function(req, res) {
       console.log(err);
     else 
       res.json(teams);
-  }).limit(20);
+  });
+});
+
+router.route('/dictionary').get(function(req, res) {
+  VenuesModel.find({}, { name: 1 }, function(err, teams) {
+    if (err) 
+      console.log(err);
+    else 
+      res.json(teams);
+  });
 });
 
 router.route('/:id').get(function(req, res) {

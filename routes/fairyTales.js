@@ -11,6 +11,16 @@ router.route('/').get(function(req, res) {
   });
 });
 
+router.route('/dictionary').get(function(req, res) {
+  FairyTalesModel.find({}, { name: 1 }, function(err, fairyTales) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(fairyTales);
+    }
+  });
+});
+
 router.route('/:id').get(function(req, res) {
   let id = req.params.id;
   FairyTalesModel.findById(id, function(err, fairyTales) {

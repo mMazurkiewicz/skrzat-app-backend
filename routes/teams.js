@@ -10,6 +10,15 @@ router.route('/').get(function(req, res) {
   });
 });
 
+router.route('/dictionary').get(function(req, res) {
+  TeamsModel.find({}, { name: 1 }, function(err, teams) {
+    if (err) 
+      console.log(err);
+    else 
+      res.json(teams);
+  });
+});
+
 router.route('/:id').get(function(req, res) {
   let id = req.params.id;
   TeamsModel.findById(id, function(err, team) {
