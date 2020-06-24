@@ -38,8 +38,10 @@ router.route('/:id').post(function(req, res) {
     if (!event)
       res.status(404).send("data is not found");
     else
-      event.name = req.body.name;
-      event.description = req.body.description;
+      event.team = req.body.team;
+      event.venue = req.body.venue;
+      event.dateTime = req.body.dateTime;
+      event.fairyTale = req.body.fairyTale;
 
       event.save().then(event => {
         res.json(event);
