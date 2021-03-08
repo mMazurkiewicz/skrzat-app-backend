@@ -4,7 +4,7 @@ let VenuesModel = require('../models/venues.model');
 router.route('/').get(function(req, res) {
   VenuesModel.find(function(err, teams) {
     if (err) 
-      console.log(err);
+      res.json(err);
     else 
       res.json(teams);
   });
@@ -13,7 +13,7 @@ router.route('/').get(function(req, res) {
 router.route('/dictionary').get(function(req, res) {
   VenuesModel.find({}, { name: 1 }, function(err, teams) {
     if (err) 
-      console.log(err);
+      res.json(err);
     else 
       res.json(teams);
   });
@@ -23,7 +23,7 @@ router.route('/:id').get(function(req, res) {
   let id = req.params.id;
   VenuesModel.findById(id, function(err, team) {
     if (err) 
-      console.log(err);
+      res.json(err);
     else 
       res.json(team);
   });
