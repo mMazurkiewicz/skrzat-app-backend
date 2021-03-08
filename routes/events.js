@@ -4,7 +4,7 @@ let EventsModel = require('../models/events.model');
 router.route('/').get(function(req, res) {
   EventsModel.find(function(err, events) {
     if (err) {
-      console.log(err);
+      res.json(err);
     } else {
       res.json(events);
     }
@@ -15,7 +15,7 @@ router.route('/:id').get(function(req, res) {
   let id = req.params.id;
   EventsModel.findById(id, function(err, events) {
     if (err) {
-      console.log(err);
+      res.json(err);
     } else {
       res.json(events);
     }
