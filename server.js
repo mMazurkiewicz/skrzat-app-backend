@@ -10,7 +10,7 @@ const employeesRoutes = require('./routes/employees');
 const teamsRoutes = require('./routes/teams');
 const venuesRoutes = require('./routes/venues');
 const eventsRoutes = require('./routes/events');
-const db = require("./config/keys").mongoURI;
+const db = require("./keys").mongoURI;
 
 app.use(cors());
 app.use(bodyParser.json());
