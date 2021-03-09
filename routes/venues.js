@@ -11,12 +11,33 @@ router.route('/').get(function(req, res) {
 });
 
 router.route('/dictionary').get(function(req, res) {
-  VenuesModel.find({}, { name: 1 }, function(err, teams) {
-    if (err) 
-      res.json(err);
-    else 
-      res.json(teams);
-  });
+  const value = req.query.value || "";
+
+  VenuesModel.find(
+    {
+      '$or': [
+        {
+          name: {
+            '$regex': value, 
+            '$options': 'i'
+          }
+        },
+        {
+          city: {
+            '$regex': value, 
+            '$options': 'i'
+          }
+        }
+      ]
+    }, 
+    { name: 1 }, 
+    function(err, teams) {
+      if (err) 
+        res.json(err);
+      else 
+        res.json(teams);
+  })
+  .limit(200);
 });
 
 router.route('/:id').get(function(req, res) {
