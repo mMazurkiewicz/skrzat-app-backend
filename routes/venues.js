@@ -30,7 +30,7 @@ router.route('/dictionary').get(function(req, res) {
         }
       ]
     }, 
-    { name: 1 }, 
+    { name: 1, city: 1 }, 
     function(err, teams) {
       if (err) 
         res.json(err);
