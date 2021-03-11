@@ -9,6 +9,7 @@ let EventsModel = new Schema({
     },
     venue: {
       name: { type: String, required: true },
+      city: { type: String, required: true },
       _id: {type: ObjectId, required: true },
     },
     fairyTale: {
