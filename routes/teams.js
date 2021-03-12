@@ -11,7 +11,7 @@ router.route('/').get(function(req, res) {
 });
 
 router.route('/dictionary').get(function(req, res) {
-  TeamsModel.find({}, { name: 1 }, function(err, teams) {
+  TeamsModel.find({}, { name: 1, color: 1 }, function(err, teams) {
     if (err) 
       res.json(err);
     else 
@@ -48,6 +48,7 @@ router.route('/:id').post(function(req, res) {
     else
       team.name = req.body.name;
       team.members = req.body.members;
+      team.color = req.body.color;
 
       team.save().then(team => {
           res.json(team);
