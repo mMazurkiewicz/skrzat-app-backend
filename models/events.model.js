@@ -9,7 +9,6 @@ let EventsModel = new Schema({
     },
     venue: {
       name: { type: String, required: true },
-      city: { type: String, required: true },
       _id: {type: ObjectId, required: true },
     },
     fairyTale: {
@@ -18,7 +17,6 @@ let EventsModel = new Schema({
     },
     team: {
       name: { type: String, required: true },
-      color: { type: String, required: true },
       _id: {type: ObjectId, required: true },
     },
 });
