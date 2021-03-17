@@ -7,7 +7,7 @@ router.route('/').get(function(req, res) {
       res.json(err);
     else 
       res.json(teams);
-  });
+  }).limit(10);;
 });
 
 router.route('/dictionary').get(function(req, res) {
