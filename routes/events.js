@@ -2,12 +2,48 @@ const router = require('express').Router();
 let EventsModel = require('../models/events.model');
 
 router.route('/').get(function(req, res) {
-  EventsModel.find(function(err, events) {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json(events);
+  EventsModel.aggregate([
+    {
+      $lookup:
+      {
+        from: 'venuesmodels',
+        localField: 'venue._id',
+        foreignField: "_id",
+        as: 'venue'
+      },
+    },
+    {
+      $lookup:
+      {
+        from: 'teamsmodels',
+        localField: 'team._id',
+        foreignField: "_id",
+        as: 'team'
+      },
+    },
+    {
+      $lookup:
+      {
+        from: 'fairytalesmodels',
+        localField: 'fairyTale._id',
+        foreignField: "_id",
+        as: 'fairyTale'
+      },
+    },
+    {
+      $unwind: '$venue',
+    },
+    {
+      $unwind: '$team',
+    },
+    {
+      $unwind: '$fairyTale'
     }
+  ]).exec(function(err, employees) {
+    if (err) 
+      res.json(err);
+    else 
+      res.json(employees);
   });
 });
 
