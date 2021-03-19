@@ -2,6 +2,10 @@ const router = require('express').Router();
 let EventsModel = require('../models/events.model');
 
 router.route('/').get(function(req, res) {
+  const { page, itemsPerPage } = req.query;
+  const skip = Number(page) > 0 ? ( ( Number(page) - 1 ) * Number(itemsPerPage) ) : 0;
+  const limit = Number(itemsPerPage);
+
   EventsModel.aggregate([
     {
       $lookup:
@@ -38,7 +42,25 @@ router.route('/').get(function(req, res) {
     },
     {
       $unwind: '$fairyTale'
-    }
+    },
+    { $match: {} },
+    {
+      $facet: {
+        items: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        metaData: [
+          { 
+            $group: { 
+              _id: null, 
+              totalItems: { $sum: 1 } ,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind : "$metaData" },
   ]).exec(function(err, employees) {
     if (err) 
       res.json(err);

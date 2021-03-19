@@ -2,13 +2,35 @@ const router = require('express').Router();
 let FairyTalesModel = require('../models/fairyTales.model');
 
 router.route('/').get(function(req, res) {
-  FairyTalesModel.find(function(err, fairyTales) {
-    if (err) {
+  const { page, itemsPerPage } = req.query;
+  const skip = Number(page) > 0 ? ( ( Number(page) - 1 ) * Number(itemsPerPage) ) : 0;
+  const limit = Number(itemsPerPage);
+  
+  FairyTalesModel.aggregate([
+    { $match: {} },
+    {
+      $facet: {
+        items: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        metaData: [
+          { 
+            $group: { 
+              _id: null, 
+              totalItems: { $sum: 1 } ,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind : "$metaData" },
+  ]).exec(function(err, teams) {
+    if (err) 
       res.json(err);
-    } else {
-      res.json(fairyTales);
-    }
-  });
+    else 
+      res.json(teams);
+  })
 });
 
 router.route('/dictionary').get(function(req, res) {
