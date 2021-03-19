@@ -139,6 +139,10 @@ router.route('/:id').post(function(req, res) {
 });
 
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { page, itemsPerPage } = req.query;
+  const skip = Number(page) > 0 ? ( ( Number(page) - 1 ) * Number(itemsPerPage) ) : 0;
+  const limit = Number(itemsPerPage);
+
   EmployeesModel.aggregate([
     {
       $lookup:
@@ -149,6 +153,24 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         as: 'teams'
       }
     },
+    { $match: {} },
+    {
+      $facet: {
+        items: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        metaData: [
+          { 
+            $group: { 
+              _id: null, 
+              totalItems: { $sum: 1 } ,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind : "$metaData" },
     { 
       $project: { "password": 0 } 
     }

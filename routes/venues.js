@@ -2,12 +2,40 @@ const router = require('express').Router();
 let VenuesModel = require('../models/venues.model');
 
 router.route('/').get(function(req, res) {
-  VenuesModel.find(function(err, teams) {
+  // use options in future for filtration
+  // const options = { name: {
+  //   '$regex': 'domowe przedszkole', 
+  //   '$options': 'i'
+  // }};
+  const { page, itemsPerPage } = req.query;
+  const skip = Number(page) > 0 ? ( ( Number(page) - 1 ) * Number(itemsPerPage) ) : 0;
+  const limit = Number(itemsPerPage);
+
+  VenuesModel.aggregate([
+    { $match: {} },
+    {
+      $facet: {
+        items: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        metaData: [
+          { 
+            $group: { 
+              _id: null, 
+              totalItems: { $sum: 1 } ,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind : "$metaData" },
+  ]).exec(function(err, teams) {
     if (err) 
       res.json(err);
     else 
       res.json(teams);
-  }).limit(10);;
+  })
 });
 
 router.route('/dictionary').get(function(req, res) {
