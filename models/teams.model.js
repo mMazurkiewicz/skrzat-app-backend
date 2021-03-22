@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-var MemberSchema = new Schema({ name: String, _id: ObjectId });
+// var MemberSchema = new Schema({ name: String, _id: ObjectId });
 
 let TeamsModel = new Schema({
     name: {
@@ -13,7 +13,7 @@ let TeamsModel = new Schema({
         type: String,
         required: true
     },
-    members: [MemberSchema],
+    members: [{type: ObjectId}],
 });
 
 module.exports = mongoose.model('TeamsModel', TeamsModel);
