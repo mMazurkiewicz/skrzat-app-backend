@@ -9,6 +9,14 @@ router.route('/').get(function(req, res) {
   TeamsModel.aggregate([
     { $match: {} },
     {
+      $lookup: {
+        from: 'employeesmodels',
+        localField: 'members',
+        foreignField: "_id",
+        as: 'members'
+      },
+    },
+    {
       $facet: {
         items: [
           { $skip: skip },
@@ -25,6 +33,16 @@ router.route('/').get(function(req, res) {
       },
     },
     { $unwind : "$metaData" },
+    {
+      $project: {
+        "metaData": 1,
+        "items": {
+          "_id": 1,
+          "name": 1,
+          "color": 1,
+          "members": { "name": 1, "_id": 1 }}
+      }
+    }
   ]).exec(function(err, teams) {
     if (err) 
       res.json(err);

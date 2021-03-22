@@ -12,9 +12,6 @@ const passport = require('passport');
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-// @route POST api/users/register
-// @desc Register user
-// @access Public
 router.post("/0", (req, res) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -51,9 +48,6 @@ router.post("/0", (req, res) => {
   });
 });
 
-// @route POST api/employees/login
-// @desc Login employee and return JWT token
-// @access Public
 router.post("/login", (req, res) => {
   // Form validation
   const { errors, isValid } = validateLoginInput(req.body);
@@ -149,7 +143,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
       {
         from: 'teamsmodels',
         localField: '_id',
-        foreignField: "members._id",
+        foreignField: "members",
         as: 'teams'
       }
     },
@@ -182,6 +176,26 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
   });
 });
 
+router.route('/dictionary').get(function(req, res) {
+  const value = req.query.value || "";
+
+  EmployeesModel.find(
+    {
+      name: {
+        '$regex': value, 
+        '$options': 'i'
+      }
+    }, 
+    { name: 1 }, 
+    function(err, teams) {
+      if (err) 
+        res.json(err);
+      else 
+        res.json(teams);
+  })
+  .limit(200);
+});
+
 router.route('/:id').get(function(req, res) {
   let id = ObjectId(req.params.id);
 
@@ -196,7 +210,7 @@ router.route('/:id').get(function(req, res) {
       {
         from: 'teamsmodels',
         localField: '_id',
-        foreignField: "members._id",
+        foreignField: "members",
         as: 'teams'
       }
     },
